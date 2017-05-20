@@ -1,8 +1,8 @@
 #include <uWS/uWS.h>
 #include <iostream>
 #include "json.hpp"
-#include "PID.h"
 #include "Simulator.h"
+#include "Twiddle.h"
 #include <math.h>
 
 // for convenience
@@ -32,11 +32,9 @@ std::string hasData(std::string s) {
 int main()
 {
   uWS::Hub h;
+  Twiddle twiddle(0.001, 100);
 
-  PID pid;
-  pid.Init(5.0, 0.01, 30.0);
-
-  h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&twiddle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     Simulator sim(ws);
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -56,17 +54,7 @@ int main()
           // DEBUG
           std::cout << "CTE: " << cte << " Speed: " << speed << " Angle: " << angle << std::endl;
 
-          /*
-          * TODO: Calcuate steering value here, remember the steering value is
-          * [-1, 1].
-          * NOTE: Feel free to play around with the throttle and speed. Maybe use
-          * another PID controller to control the speed!
-          */
-          pid.UpdateError(cte);
-          double steer_value = speed > 1. ? pid.TotalError() / speed : 0.;
-          steer_value = steer_value <  1. ? steer_value :  1.;
-          steer_value = steer_value > -1. ? steer_value : -1.;
-
+          double steer_value = twiddle.SteerValue(cte, speed);
           sim.Steer(steer_value, 0.3);
         }
       } else {

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "json.hpp"
 #include "Simulator.h"
-#include "Twiddle.h"
+#include "Engine.h"
 #include <math.h>
 
 // for convenience
@@ -32,9 +32,9 @@ std::string hasData(std::string s) {
 int main()
 {
   uWS::Hub h;
-  Twiddle twiddle(0.001, 100);
+  Engine engine(0.001, 1000);
 
-  h.onMessage([&twiddle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&engine](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     Simulator sim(ws);
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -54,8 +54,11 @@ int main()
           // DEBUG
           std::cout << "CTE: " << cte << " Speed: " << speed << " Angle: " << angle << std::endl;
 
-          double steer_value = twiddle.SteerValue(cte, speed);
-          sim.Steer(steer_value, 0.3);
+          double steer_value = engine.SteerValue(cte, speed);
+          sim.Steer(steer_value, 0.35);
+          if(engine.IsRobotRunOver()) {
+            sim.Reset();
+          }
         }
       } else {
         // Manual driving

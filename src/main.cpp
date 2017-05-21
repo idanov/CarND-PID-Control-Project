@@ -32,7 +32,7 @@ std::string hasData(std::string s) {
 int main()
 {
   uWS::Hub h;
-  Engine engine(0.001, 1000);
+  Engine engine(false, 0.001, 1000);
 
   h.onMessage([&engine](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     Simulator sim(ws);

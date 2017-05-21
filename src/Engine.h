@@ -21,7 +21,7 @@ private:
   void StartRobotRun();
   void NextParam();
 public:
-  Engine(double tolerance, int n_steps);
+  Engine(bool twiddle, double tolerance, int n_steps);
   double SteerValue(double cte, double speed);
   bool IsRobotRunOver();
 };

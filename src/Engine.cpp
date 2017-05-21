@@ -3,13 +3,13 @@
 #include <iostream>
 #include <valarray>
 
-Engine::Engine(double tolerance, int n_steps) {
+Engine::Engine(bool twiddle, double tolerance, int n_steps) {
   this->best_err = MAXDOUBLE;
   this->iter = 0;
   this->curr = 0;
   this->tolerance = tolerance;
   this->n_steps = n_steps;
-  this->twiddle = false;
+  this->twiddle = twiddle;
   if(!this->twiddle) {
     StartRobotRun();
   } else {

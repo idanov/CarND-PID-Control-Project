@@ -18,11 +18,13 @@ void Simulator::Steer(double steer_value, double throttle) {
 }
 
 void Simulator::Reset() {
-  std::string reset_msg = "42[\"reset\",{}]";
-  ws.send(reset_msg.data(), reset_msg.length(), uWS::OpCode::TEXT);
+  std::string msg = "42[\"reset\",{}]";
+  std::cout << msg << std::endl;
+  ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
 }
 
 void Simulator::Manual() {
   std::string msg = "42[\"manual\",{}]";
+  std::cout << msg << std::endl;
   ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
 }
